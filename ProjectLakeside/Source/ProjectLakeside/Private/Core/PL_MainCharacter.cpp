@@ -11,7 +11,6 @@
 #include "World/PL_PullableObject.h"
 #include "DrawDebugHelpers.h"
 #include "World/PL_InteractableActor.h"
-#include "World/PL_InteractableButton.h"
 #include "World/PL_InteractableObject.h"
 
 /* --- PUBLIC --- */
@@ -89,7 +88,7 @@ void APL_MainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		EnhancedInputComponent->BindAction(PullObjectsAction, ETriggerEvent::Triggered, this, &APL_MainCharacter::PerformObjectPull);
 		EnhancedInputComponent->BindAction(PullObjectsAction, ETriggerEvent::Completed, this, &APL_MainCharacter::PerformObjectPull);
 		
-		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &APL_MainCharacter::PerformInteraction);
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &APL_MainCharacter::PerformInteraction);
 	}
 }
 
