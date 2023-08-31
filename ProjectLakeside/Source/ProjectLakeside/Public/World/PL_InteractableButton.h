@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PL_InteractableObject.h"
+#include "PL_InteractableActor.h"
 #include "GameFramework/Actor.h"
 #include "PL_InteractableButton.generated.h"
 
 UCLASS()
-class PROJECTLAKESIDE_API APL_InteractableButton : public AActor, public IPL_InteractableObject
+class PROJECTLAKESIDE_API APL_InteractableButton : public APL_InteractableActor
 {
 	GENERATED_BODY()
 	

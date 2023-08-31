@@ -10,6 +10,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "World/PL_PullableObject.h"
 #include "DrawDebugHelpers.h"
+#include "World/PL_InteractableActor.h"
 #include "World/PL_InteractableButton.h"
 #include "World/PL_InteractableObject.h"
 
@@ -175,7 +176,7 @@ void APL_MainCharacter::PerformInteraction(const FInputActionValue& Value)
 
 	TArray<AActor*> InteractableActors;
 	if (UKismetSystemLibrary::SphereOverlapActors(GetWorld(), GetActorLocation(), InteractionRange, InteractionTypeQueries,
-		APL_InteractableButton::StaticClass(), TArray<AActor*>(),  InteractableActors))
+		APL_InteractableActor::StaticClass(), TArray<AActor*>(),  InteractableActors))
 	{
 		//! TODO: Make this an actor component and cache entered actors instead
 		Algo::Sort(InteractableActors, [this](const AActor* A, const AActor* B) { return GetDistanceTo(A) < GetDistanceTo(B); });

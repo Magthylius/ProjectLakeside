@@ -16,7 +16,8 @@ APL_InteractableButton::APL_InteractableButton()
 
 void APL_InteractableButton::StartInteraction()
 {
-	IPL_InteractableObject::StartInteraction();
-
-	if (GEngine) GEngine->AddOnScreenDebugMessage(0, 2.f, FColor::Cyan, "You touched me!");
+	Super::StartInteraction();
+	
+	//! TODO: reset ball
+	if (GEngine) GEngine->AddOnScreenDebugMessage(0, 2.f, FColor::Cyan, "RESET BALL");
 }
