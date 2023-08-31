@@ -5,11 +5,11 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
-#include "ProjectLakesideCharacter.generated.h"
+#include "PL_MainCharacter.generated.h"
 
 
 UCLASS(config=Game)
-class AProjectLakesideCharacter : public ACharacter
+class APL_MainCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -38,7 +38,7 @@ class AProjectLakesideCharacter : public ACharacter
 	class UInputAction* LookAction;
 
 public:
-	AProjectLakesideCharacter();
+	APL_MainCharacter();
 	
 
 protected:
