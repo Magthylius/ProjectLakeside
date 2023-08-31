@@ -10,6 +10,8 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "World/PL_PullableObject.h"
 #include "DrawDebugHelpers.h"
+#include "World/PL_InteractableButton.h"
+#include "World/PL_InteractableObject.h"
 
 /* --- PUBLIC --- */
 
@@ -85,6 +87,8 @@ void APL_MainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 		
 		EnhancedInputComponent->BindAction(PullObjectsAction, ETriggerEvent::Triggered, this, &APL_MainCharacter::PerformObjectPull);
 		EnhancedInputComponent->BindAction(PullObjectsAction, ETriggerEvent::Completed, this, &APL_MainCharacter::PerformObjectPull);
+		
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Triggered, this, &APL_MainCharacter::PerformInteraction);
 	}
 }
 
@@ -162,6 +166,23 @@ void APL_MainCharacter::PerformObjectPull(const FInputActionValue& Value)
 		Pullable->Launch(ForceDirection);
 
 		PulledObject.Reset();
+	}
+}
+
+void APL_MainCharacter::PerformInteraction(const FInputActionValue& Value)
+{
+	if (!Value.Get<bool>()) return;
+
+	TArray<AActor*> InteractableActors;
+	if (UKismetSystemLibrary::SphereOverlapActors(GetWorld(), GetActorLocation(), InteractionRange, InteractionTypeQueries,
+		APL_InteractableButton::StaticClass(), TArray<AActor*>(),  InteractableActors))
+	{
+		//! TODO: Make this an actor component and cache entered actors instead
+		Algo::Sort(InteractableActors, [this](const AActor* A, const AActor* B) { return GetDistanceTo(A) < GetDistanceTo(B); });
+		IPL_InteractableObject* Interactable = Cast<IPL_InteractableObject>(InteractableActors[0]);
+
+		if (Interactable == nullptr) return;
+		Interactable->StartInteraction();
 	}
 }
 

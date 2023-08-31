@@ -32,6 +32,7 @@ protected:
 	void PerformLook(const FInputActionValue& Value);
 
 	void PerformObjectPull(const FInputActionValue& Value);
+	void PerformInteraction(const FInputActionValue& Value);
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess))
@@ -53,18 +54,24 @@ private:
 	float ObjectHoldOrbitRange = 75.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Gameplay", meta = (AllowPrivateAccess))
 	float ObjectLaunchForce = 2000.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Gameplay", meta = (AllowPrivateAccess))
+	float InteractionRange = 200.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Gameplay", meta = (AllowPrivateAccess))
+	TArray<TEnumAsByte<EObjectTypeQuery>> InteractionTypeQueries;
 	
-	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Settings|Input", meta = (AllowPrivateAccess))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Input", meta = (AllowPrivateAccess))
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;
-	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Settings|Input", meta = (AllowPrivateAccess))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Input", meta = (AllowPrivateAccess))
 	TObjectPtr<UInputAction> JumpAction;
-	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Settings|Input", meta = (AllowPrivateAccess))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Input", meta = (AllowPrivateAccess))
 	TObjectPtr<UInputAction> MoveAction;
-	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Settings|Input", meta = (AllowPrivateAccess))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Input", meta = (AllowPrivateAccess))
 	TObjectPtr<UInputAction> LookAction;
-	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Settings|Input", meta = (AllowPrivateAccess))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Input", meta = (AllowPrivateAccess))
 	TObjectPtr<UInputAction> PullObjectsAction;
-
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Input", meta = (AllowPrivateAccess))
+	TObjectPtr<UInputAction> InteractAction;
+	
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Runtime Data", meta = (AllowPrivateAccess))
 	TWeakObjectPtr<AActor> PulledObject;
 };
