@@ -10,6 +10,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "World/PL_PullableObject.h"
 #include "DrawDebugHelpers.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "World/PL_InteractableActor.h"
 #include "World/PL_InteractableObject.h"
 
@@ -18,7 +19,9 @@
 APL_MainCharacter::APL_MainCharacter()
 {
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
-
+	GetCapsuleComponent()->BodyInstance.bLockXRotation = true;
+	GetCapsuleComponent()->BodyInstance.bLockYRotation = true;
+	
 	UCharacterMovementComponent* MovementComponent = GetCharacterMovement();
 	MovementComponent->bOrientRotationToMovement = true;
 	MovementComponent->RotationRate = FRotator(0.0f, 500.0f, 0.0f); 
@@ -37,6 +40,12 @@ APL_MainCharacter::APL_MainCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
+
+	ParticleSystemComponent = CreateDefaultSubobject<UParticleSystemComponent>("ParticleSystemComponent");
+	ParticleSystemComponent->SetupAttachment(RootComponent);
+	ParticleSystemComponent->SetRelativeRotation(FRotator(180.f, 180.f, 0.f));
+	ParticleSystemComponent->SetWorldScale3D(FVector(0.2f));
+	ParticleSystemComponent->SetHiddenInGame(true);
 
 	JumpMaxCount = 2;
 	bUseControllerRotationPitch = false;
@@ -80,8 +89,11 @@ void APL_MainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 {
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent)) {
 		
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+		
+		EnhancedInputComponent->BindAction(JetpackAction, ETriggerEvent::Triggered, this, &APL_MainCharacter::PerformJetpack);
+		EnhancedInputComponent->BindAction(JetpackAction, ETriggerEvent::Completed, this, &APL_MainCharacter::PerformJetpack);
 
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APL_MainCharacter::PerformMove);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APL_MainCharacter::PerformLook);
@@ -105,8 +117,8 @@ void APL_MainCharacter::PerformMove(const FInputActionValue& Value)
 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
-		AddMovementInput(ForwardDirection, MovementVector.Y);
-		AddMovementInput(RightDirection, MovementVector.X);
+		AddMovementInput(ForwardDirection, MovementVector.Y, true);
+		AddMovementInput(RightDirection, MovementVector.X, true);
 	}
 }
 
@@ -118,6 +130,31 @@ void APL_MainCharacter::PerformLook(const FInputActionValue& Value)
 	{
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
+	}
+}
+
+void APL_MainCharacter::PerformJetpack(const FInputActionValue& Value)
+{
+	const bool bIsPressed = Value.Get<bool>();
+	if (bIsPressed)
+	{
+		GetCapsuleComponent()->SetEnableGravity(false);
+		GetCapsuleComponent()->SetSimulatePhysics(true);
+		GetCapsuleComponent()->AddForce(FVector::UpVector * JetpackForce, FName(), true);
+
+		if (!bJetpackFireStarted)
+		{
+			bJetpackFireStarted = true;
+			ParticleSystemComponent->SetHiddenInGame(false);
+		}
+	}
+	else
+	{
+		GetCapsuleComponent()->SetEnableGravity(true);
+		GetCapsuleComponent()->SetSimulatePhysics(false);
+
+		bJetpackFireStarted = false;
+		ParticleSystemComponent->SetHiddenInGame(true);
 	}
 }
 

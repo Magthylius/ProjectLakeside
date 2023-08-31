@@ -30,6 +30,7 @@ protected:
 
 	void PerformMove(const FInputActionValue& Value);
 	void PerformLook(const FInputActionValue& Value);
+	void PerformJetpack(const FInputActionValue& Value);
 
 	void PerformObjectPull(const FInputActionValue& Value);
 	void PerformInteraction(const FInputActionValue& Value);
@@ -39,6 +40,8 @@ private:
 	TObjectPtr<USpringArmComponent> CameraBoom;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess))
 	TObjectPtr<UCameraComponent> FollowCamera;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess))
+	TObjectPtr<UParticleSystemComponent> ParticleSystemComponent;
 
 	/*UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Settings|Gameplay", meta = (AllowPrivateAccess))
 	FGameplayTagContainer PullObjectTags;*/
@@ -58,6 +61,8 @@ private:
 	float InteractionRange = 200.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Gameplay", meta = (AllowPrivateAccess))
 	TArray<TEnumAsByte<EObjectTypeQuery>> InteractionTypeQueries;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Gameplay", meta = (AllowPrivateAccess))
+	float JetpackForce = 1000.f;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Input", meta = (AllowPrivateAccess))
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;
@@ -71,7 +76,11 @@ private:
 	TObjectPtr<UInputAction> PullObjectsAction;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Input", meta = (AllowPrivateAccess))
 	TObjectPtr<UInputAction> InteractAction;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Input", meta = (AllowPrivateAccess))
+	TObjectPtr<UInputAction> JetpackAction;
 	
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Runtime Data", meta = (AllowPrivateAccess))
 	TWeakObjectPtr<AActor> PulledObject;
+
+	bool bJetpackFireStarted = false;
 };
