@@ -171,7 +171,7 @@ void APL_MainCharacter::PerformObjectPull(const FInputActionValue& Value)
 
 		FHitResult HitResult;
 		if (UKismetSystemLibrary::SphereTraceSingle(GetWorld(), StartLocation, EndLocation, PullObjectTraceRadius, TraceTypeQuery1,
-			false, TArray<AActor*>(), EDrawDebugTrace::ForOneFrame, HitResult, true))
+			false, TArray<AActor*>(), EDrawDebugTrace::None, HitResult, true))
 		{
 			AActor* PulledActor = HitResult.GetActor();
 			IPL_PullableObject* Pullable = Cast<IPL_PullableObject>(PulledActor);
