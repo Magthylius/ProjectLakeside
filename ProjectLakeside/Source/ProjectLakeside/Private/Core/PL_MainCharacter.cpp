@@ -123,6 +123,7 @@ void APL_MainCharacter::PerformObjectPull(const FInputActionValue& Value)
 	
 	if (bIsPressed && !bValidObject)
 	{
+		//! Pick up and register to pull
 		const FVector StartLocation = GetFollowCamera()->GetComponentLocation();
 		const FVector EndLocation = StartLocation + GetFollowCamera()->GetForwardVector() * PullObjectRange;
 
@@ -139,8 +140,26 @@ void APL_MainCharacter::PerformObjectPull(const FInputActionValue& Value)
 	}
 	else if (!bIsPressed && bValidObject)
 	{
+		//! End the pull and launch the object
 		IPL_PullableObject* Pullable = Cast<IPL_PullableObject>(PulledObject);
 		Pullable->EndPull();
+
+		const FVector StartLocation = GetFollowCamera()->GetComponentLocation();
+		const FVector EndLocation = StartLocation + GetFollowCamera()->GetForwardVector() * 1000.0f;
+
+		FVector AimLocation = EndLocation;
+		
+		FHitResult HitResult;
+		if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECC_Visibility))
+		{
+			AimLocation = HitResult.Location;
+		}
+
+		FVector ForceDirection = AimLocation - PulledObject->GetActorLocation();
+		ForceDirection.Normalize();
+		ForceDirection *= ObjectLaunchForce;
+		
+		Pullable->Launch(ForceDirection);
 
 		PulledObject.Reset();
 	}

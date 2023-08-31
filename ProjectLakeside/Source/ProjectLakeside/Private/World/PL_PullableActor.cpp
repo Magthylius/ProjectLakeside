@@ -42,3 +42,8 @@ void APL_PullableActor::EndPull()
 	StaticMeshComponent->SetSimulatePhysics(true);
 }
 
+void APL_PullableActor::Launch(const FVector ForceDirection)
+{
+	StaticMeshComponent->SetPhysicsLinearVelocity(ForceDirection);
+}
+

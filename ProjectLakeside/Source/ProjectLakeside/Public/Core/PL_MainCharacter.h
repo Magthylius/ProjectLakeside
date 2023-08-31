@@ -51,6 +51,8 @@ private:
 	float ObjectHoldHeight = 150.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Gameplay", meta = (AllowPrivateAccess))
 	float ObjectHoldOrbitRange = 75.f;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings|Gameplay", meta = (AllowPrivateAccess))
+	float ObjectLaunchForce = 2000.f;
 	
 	UPROPERTY(EditInstanceOnly, BlueprintReadOnly, Category = "Settings|Input", meta = (AllowPrivateAccess))
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;

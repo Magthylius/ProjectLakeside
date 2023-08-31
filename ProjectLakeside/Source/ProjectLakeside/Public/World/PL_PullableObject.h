@@ -23,4 +23,6 @@ class PROJECTLAKESIDE_API IPL_PullableObject
 public:
 	virtual void StartPull() = 0;
 	virtual void EndPull() = 0;
+
+	virtual void Launch(FVector Direction) = 0;
 };

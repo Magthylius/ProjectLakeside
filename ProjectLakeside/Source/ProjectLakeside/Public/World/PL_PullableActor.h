@@ -22,6 +22,8 @@ protected:
 	virtual void StartPull() override;
 	virtual void EndPull() override;
 
+	virtual void Launch(FVector ForceDirection) override;
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess))
 	TObjectPtr<UStaticMeshComponent> StaticMeshComponent;
