@@ -18,18 +18,6 @@ APL_PullableActor::APL_PullableActor()
 
 /* --- PROTECTED --- */
 
-void APL_PullableActor::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-void APL_PullableActor::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
 void APL_PullableActor::StartPull()
 {
 	StaticMeshComponent->SetEnableGravity(false);
